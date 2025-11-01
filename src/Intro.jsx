@@ -1,4 +1,8 @@
 import React from "react";
+import { resolveAssetPath } from "./utils/assetPaths";
+
+const KASZTA_IMAGE = resolveAssetPath("assets/kaszta.png");
+const SZUFLADA_IMAGE = resolveAssetPath("assets/kaszta_szuflada.png");
 
 export default function Intro({ onSelect }) {
   return (
@@ -18,13 +22,13 @@ export default function Intro({ onSelect }) {
         }}
       >
         <img
-          src="/assets/kaszta.png"
+          src={KASZTA_IMAGE}
           alt="Kaszta"
           style={{ width: "400px", cursor: "pointer" }}
           onClick={() => onSelect("kaszta")}
         />
         <img
-          src="/assets/kaszta_szuflada.png"
+          src={SZUFLADA_IMAGE}
           alt="Kaszta szuflada"
           style={{ width: "400px", cursor: "pointer" }}
           onClick={() => onSelect("szuflada")}

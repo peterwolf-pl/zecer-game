@@ -102,7 +102,7 @@ return (
       onClick={handleKasztaClick}
     >
       <img
-        src="/assets/kaszta.png"
+        src="assets/kaszta.png"
         alt="Kaszta"
         width={KASZTA_WIDTH}
         height={KASZTA_HEIGHT}

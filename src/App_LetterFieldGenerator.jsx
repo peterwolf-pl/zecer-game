@@ -5,13 +5,13 @@ import LetterFieldEditor from "./LetterFieldEditor";
 const KASZTA_VARIANTS = {
   kaszta: {
     label: "Kaszta podstawowa",
-    image: "/assets/kaszta.png",
-    poz: "/poz.json",
+    image: "assets/kaszta.png",
+    poz: "poz.json",
   },
   szuflada: {
     label: "Szuflada",
-    image: "/assets/kaszta_szuflada.png",
-    poz: "/poz_szuflada.json",
+    image: "assets/kaszta_szuflada.png",
+    poz: "poz_szuflada.json",
   },
 };
 

@@ -108,7 +108,7 @@ export default function PrintModule({ lines, onBack }) {
             }}
           >
             <img
-              src="/assets/korektor.png"
+              src="assets/korektor.png"
               alt="korektor"
               style={{
                 position: "absolute",
@@ -124,7 +124,7 @@ export default function PrintModule({ lines, onBack }) {
               }}
             />
             <img
-              src="/assets/docisk.png"
+              src="assets/docisk.png"
               alt="docisk"
               style={{
                 position: "absolute",

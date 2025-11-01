@@ -11,8 +11,8 @@ export default function App() {
   const [kasztaVariant, setKasztaVariant] = useState("kaszta");
 
   const kasztaSettings = {
-    kaszta: { image: "/assets/kaszta.png", poz: "/poz.json" },
-    szuflada: { image: "/assets/kaszta_szuflada.png",  poz: "/poz_szuflada.json" },
+    kaszta: { image: "assets/kaszta.png", poz: "poz.json" },
+    szuflada: { image: "assets/kaszta_szuflada.png",  poz: "poz_szuflada.json" },
   };
 
   function handleSelect(variant) {

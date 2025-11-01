@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { resolveAssetPath } from "./utils/assetPaths";
 
 const A4_WIDTH = 796;
 const A4_HEIGHT = 1123;
+const SHEET_IMAGE_SRC = "assets/blacha.png";
 const SHEET_OFFSET_RIGHT = 120;
 const SHEET_OFFSET_TOP = 170;
 const LETTER_BASE_HEIGHT = 96;
@@ -29,14 +31,18 @@ export default function PageComposer({
   const [pageW, setPageW] = useState(A4_WIDTH);
   const wrapperRef = useRef();
   const [sheetDims, setSheetDims] = useState({ width: A4_WIDTH, height: A4_HEIGHT });
+  const resolvedSheetImage = useMemo(
+    () => resolveAssetPath(SHEET_IMAGE_SRC),
+    []
+  );
 
   useEffect(() => {
     const img = new Image();
-    img.src = "/assets/blacha.png";
+    img.src = resolvedSheetImage;
     img.onload = () => {
       setSheetDims({ width: img.width, height: img.height });
     };
-  }, []);
+  }, [resolvedSheetImage]);
 
   useEffect(() => {
     function handleResize() {
@@ -251,7 +257,7 @@ export default function PageComposer({
         <div
           ref={wrapperRef}
           style={{
-            backgroundImage: "url(/assets/blacha.png)",
+            backgroundImage: `url(${resolvedSheetImage})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             backgroundSize: "100% 100%",
@@ -298,7 +304,7 @@ export default function PageComposer({
                   {line.map((letter, j) => (
                   <img
                     key={j}
-                    src={letter.img}
+                    src={resolveAssetPath(letter.img)}
                     alt={letter.char}
                     width={letter.width * LETTER_SCALE * scale}
                     height={
@@ -337,7 +343,7 @@ export default function PageComposer({
               {lines[dragIndex].map((letter, j) => (
                 <img
                   key={j}
-                  src={letter.img}
+                  src={resolveAssetPath(letter.img)}
                   alt={letter.char}
                   width={letter.width * LETTER_SCALE * scale}
                   height={

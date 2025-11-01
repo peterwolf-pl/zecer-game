@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
+import { resolveAssetPath } from "./utils/assetPaths";
 
 // Edytuj tu swój alfabet, polskie litery wpisz na końcu jeśli chcesz
 const ALFABET = [
@@ -18,14 +19,19 @@ export default function LetterFieldGenerator() {
   const [fields, setFields] = useState([]);
   const [literaIdx, setLiteraIdx] = useState(0);
   const kasztaRef = useRef();
+  const kasztaImage = useMemo(
+    () => resolveAssetPath("assets/kaszta.png"),
+    []
+  );
 
   // Ustal bieżącą literę (mała/wielka)
   const isMale = mode === "male";
   const litera = ALFABET[literaIdx];
   // Plik obrazka zgodnie z regułą
-  const imgFile = isMale
-    ? `/assets/letters/${litera}.png`
-    : `/assets/letters/${litera}${litera}.png`;
+  const assetPath = isMale
+    ? `assets/letters/${litera}.png`
+    : `assets/letters/${litera}${litera}.png`;
+  const previewPath = resolveAssetPath(assetPath);
 
   function handleKasztaClick(e) {
     const rect = kasztaRef.current.getBoundingClientRect();
@@ -42,7 +48,7 @@ export default function LetterFieldGenerator() {
         y1: clicks[0].y,
         x2: x,
         y2: y,
-        img: imgFile
+        img: assetPath
       };
       setFields([...fields, nowyField]);
       setClicks([]);
@@ -80,7 +86,7 @@ return (
       <span className="text-2xl font-mono px-3 py-1 bg-yellow-200 rounded">
         {isMale ? litera : litera.toUpperCase()}
       </span>
-      <img src={imgFile} alt="" style={{ height: 36, marginLeft: 10, verticalAlign: "middle" }} />
+      <img src={previewPath} alt="" style={{ height: 36, marginLeft: 10, verticalAlign: "middle" }} />
       {step === 1 && (
         <span style={{ color: "#f59e42", marginLeft: 20 }}>
           → wybierz drugi narożnik
@@ -102,7 +108,7 @@ return (
       onClick={handleKasztaClick}
     >
       <img
-        src="/assets/kaszta.png"
+        src={kasztaImage}
         alt="Kaszta"
         width={KASZTA_WIDTH}
         height={KASZTA_HEIGHT}

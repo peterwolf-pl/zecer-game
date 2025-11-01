@@ -1,11 +1,12 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
+import { resolveAssetPath } from "./utils/assetPaths";
 
 const KASZTA_WIDTH = 1618;
 const KASZTA_HEIGHT = 1080;
 const SLOTS_COUNT = 20;
 const LINE_OFFSET_RIGHT = 340;
 const LINE_OFFSET_BOTTOM = 240;
-const WIERSZOWNIK_SRC = "/assets/wierszownik.jpg";
+const WIERSZOWNIK_SRC = "assets/wierszownik.jpg";
 
 function getImageSize(src) {
   return new Promise((resolve) => {
@@ -14,7 +15,12 @@ function getImageSize(src) {
     img.src = src;
   });
 }
-export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage = "/assets/kaszta.png", pozSrc = "/poz.json" }) {
+export default function LetterComposer({
+  onMoveLineToPage,
+  onBack,
+  kasztaImage = "assets/kaszta.png",
+  pozSrc = "poz.json",
+}) {
 
   const [letterFields, setLetterFields] = useState([]);
   const [slots, setSlots] = useState(Array(SLOTS_COUNT).fill(null));
@@ -27,11 +33,24 @@ export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage =
   const [kasztaW, setKasztaW] = useState(KASZTA_WIDTH);
   const [wierszownikDims, setWierszownikDims] = useState({ width: 1, height: 1 });
 
+  const resolvedWierszownikSrc = useMemo(
+    () => resolveAssetPath(WIERSZOWNIK_SRC),
+    []
+  );
+  const resolvedKasztaImage = useMemo(
+    () => resolveAssetPath(kasztaImage),
+    [kasztaImage]
+  );
+  const resolvedPozSrc = useMemo(
+    () => resolveAssetPath(pozSrc),
+    [pozSrc]
+  );
+
   useEffect(() => {
     const img = new window.Image();
     img.onload = () => setWierszownikDims({ width: img.width, height: img.height });
-    img.src = WIERSZOWNIK_SRC;
-  }, []);
+    img.src = resolvedWierszownikSrc;
+  }, [resolvedWierszownikSrc]);
 
   // BLOKUJ SCROLL strony
   useEffect(() => {
@@ -57,11 +76,30 @@ export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage =
   }, []);
 
   useEffect(() => {
-    fetch(pozSrc)
+    let ignore = false;
+    fetch(resolvedPozSrc)
       .then(res => res.json())
-      .then(setLetterFields)
-      .catch(() => setLetterFields([]));
-  }, [pozSrc]);
+      .then(data => {
+        if (ignore) return;
+        if (Array.isArray(data)) {
+          setLetterFields(
+            data.map(field => ({
+              ...field,
+              assetPath: field?.img ?? "",
+              img: resolveAssetPath(field?.img ?? ""),
+            }))
+          );
+        } else {
+          setLetterFields([]);
+        }
+      })
+      .catch(() => {
+        if (!ignore) setLetterFields([]);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [resolvedPozSrc]);
 
 
   // DRAG START (mouse/touch na field)
@@ -300,8 +338,8 @@ export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage =
               zIndex: 1, background: "transparent"
             }}
           />
-          <img
-            src={kasztaImage}
+            <img
+              src={resolvedKasztaImage}
             alt="Kaszta zecerska"
             style={{
               width: "100%",
@@ -358,7 +396,7 @@ export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage =
             }}
           >
             <img
-              src={WIERSZOWNIK_SRC}
+              src={resolvedWierszownikSrc}
               alt="Wierszownik"
               style={{
                 width: "100%",

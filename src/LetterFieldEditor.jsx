@@ -1,7 +1,22 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { resolveAssetPath } from "./utils/assetPaths";
 
 const KASZTA_WIDTH = 2222;
 const KASZTA_HEIGHT = 1521;
+const DEFAULT_KASZTA_PATH = "assets/kaszta.png";
+const DEFAULT_POZ_PATH = "poz.json";
+
+function extractFileName(path) {
+  if (!path) {
+    return "poz.json";
+  }
+  const cleanPath = path.split(/[?#]/)[0];
+  const segments = cleanPath.split("/").filter(Boolean);
+  if (segments.length === 0) {
+    return "poz.json";
+  }
+  return segments[segments.length - 1] || "poz.json";
+}
 
 function formatFieldLabel(field, index) {
   const base = field?.char ? field.char : `Pozycja ${index + 1}`;
@@ -14,8 +29,8 @@ function ensureNumber(value) {
 }
 
 export default function LetterFieldEditor({
-  kasztaImage = "/assets/kaszta.png",
-  pozSrc = "/poz.json",
+  kasztaImage = DEFAULT_KASZTA_PATH,
+  pozSrc = DEFAULT_POZ_PATH,
 }) {
   const [fields, setFields] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -29,13 +44,23 @@ export default function LetterFieldEditor({
   });
   const kasztaRef = useRef(null);
 
+  const resolvedPozSrc = useMemo(
+    () => resolveAssetPath(pozSrc),
+    [pozSrc]
+  );
+
+  const resolvedKasztaImage = useMemo(
+    () => resolveAssetPath(kasztaImage),
+    [kasztaImage]
+  );
+
   useEffect(() => {
     let ignore = false;
     async function load() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(pozSrc);
+        const response = await fetch(resolvedPozSrc);
         if (!response.ok) {
           throw new Error(`Nie udało się pobrać pliku pozycji: ${response.status}`);
         }
@@ -62,7 +87,7 @@ export default function LetterFieldEditor({
     return () => {
       ignore = true;
     };
-  }, [pozSrc]);
+  }, [resolvedPozSrc]);
 
   useEffect(() => {
     function updateSize() {
@@ -175,17 +200,30 @@ export default function LetterFieldEditor({
       ? `${safeChar}${safeChar}`
       : safeChar;
     const normalized = postfix === "spacja" ? "spacja" : postfix;
-    const path = `/assets/letters/${normalized}.png`;
+    const path = `assets/letters/${normalized}.png`;
     updateSelectedField({ img: path });
   }
 
   const jsonOutput = useMemo(() => JSON.stringify(fields, null, 2), [fields]);
 
+  function handleSaveToFile() {
+    const fileName = extractFileName(resolvedPozSrc);
+    const blob = new Blob([jsonOutput], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div style={{ maxWidth: 1180, margin: "0 auto", padding: "24px" }}>
       <h1 style={{ fontSize: 28, marginBottom: 12 }}>Edytor pól liter</h1>
       <p style={{ marginBottom: 16, color: "#475569" }}>
-        Wczytano pozycje z pliku <code>{pozSrc}</code>. Wybierz literę z listy,
+        Wczytano pozycje z pliku <code>{resolvedPozSrc}</code>. Wybierz literę z listy,
         a następnie kliknij dwa narożniki na kaszcie, aby ustawić jej pole.
       </p>
 
@@ -213,7 +251,7 @@ export default function LetterFieldEditor({
             onClick={handleKasztaClick}
           >
             <img
-              src={kasztaImage}
+              src={resolvedKasztaImage}
               alt="Kaszta"
               width={KASZTA_WIDTH}
               height={KASZTA_HEIGHT}
@@ -442,6 +480,22 @@ export default function LetterFieldEditor({
 
       <div style={{ marginTop: 32 }}>
         <h2 style={{ fontSize: 20, marginBottom: 8 }}>Aktualny JSON</h2>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <button
+            onClick={handleSaveToFile}
+            style={{
+              background: "#2563eb",
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              padding: "6px 12px",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
+          >
+            Zapisz plik konfiguracyjny
+          </button>
+        </div>
         <textarea
           readOnly
           value={jsonOutput}

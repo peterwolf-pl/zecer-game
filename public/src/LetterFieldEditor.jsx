@@ -14,8 +14,8 @@ function ensureNumber(value) {
 }
 
 export default function LetterFieldEditor({
-  kasztaImage = "/assets/kaszta.png",
-  pozSrc = "/poz.json",
+  kasztaImage = "assets/kaszta.png",
+  pozSrc = "poz.json",
 }) {
   const [fields, setFields] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
