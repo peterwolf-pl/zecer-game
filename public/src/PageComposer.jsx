@@ -32,7 +32,7 @@ export default function PageComposer({
 
   useEffect(() => {
     const img = new Image();
-    img.src = "/assets/blacha.png";
+    img.src = "assets/blacha.png";
     img.onload = () => {
       setSheetDims({ width: img.width, height: img.height });
     };
@@ -251,7 +251,7 @@ export default function PageComposer({
         <div
           ref={wrapperRef}
           style={{
-            backgroundImage: "url(/assets/blacha.png)",
+            backgroundImage: "url(assets/blacha.png)",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             backgroundSize: "100% 100%",

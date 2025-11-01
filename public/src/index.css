@@ -15,7 +15,7 @@
   color-scheme: light;
   color: #213547;
   background-color: #d4d4d4;
-  background-image: url('/assets/bg.png');
+  background-image: url('assets/bg.png');
   background-repeat: repeat;
   background-size: var(--bg-tile-size);
   --bg-tile-size: 64px;
@@ -42,7 +42,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #d4d4d4;
-  background-image: url('/assets/bg.png');
+  background-image: url('assets/bg.png');
   background-repeat: repeat;
   background-size: var(--bg-tile-size);
 }

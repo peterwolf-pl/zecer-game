@@ -43,7 +43,7 @@ export default function LetterComposer() {
   }, []);
 
   useEffect(() => {
-    fetch('/poz.json')
+    fetch('poz.json')
       .then(res => res.json())
       .then(setLetterFields)
       .catch(() => setLetterFields([]));
@@ -252,7 +252,7 @@ export default function LetterComposer() {
           }}
         />
         <img
-          src="/assets/kaszta.jpg"
+          src="assets/kaszta.jpg"
           alt="Kaszta zecerska"
           style={{
             width: "100%",

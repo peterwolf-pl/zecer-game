@@ -5,7 +5,7 @@ const KASZTA_HEIGHT = 1080;
 const SLOTS_COUNT = 20;
 const LINE_OFFSET_RIGHT = 340;
 const LINE_OFFSET_BOTTOM = 240;
-const WIERSZOWNIK_SRC = "/assets/wierszownik.jpg";
+const WIERSZOWNIK_SRC = "assets/wierszownik.jpg";
 
 function getImageSize(src) {
   return new Promise((resolve) => {
@@ -14,7 +14,7 @@ function getImageSize(src) {
     img.src = src;
   });
 }
-export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage = "/assets/kaszta.png", pozSrc = "/poz.json" }) {
+export default function LetterComposer({ onMoveLineToPage, onBack, kasztaImage = "assets/kaszta.png", pozSrc = "poz.json" }) {
 
   const [letterFields, setLetterFields] = useState([]);
   const [slots, setSlots] = useState(Array(SLOTS_COUNT).fill(null));

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { resolveAssetPath } from "./utils/assetPaths";
 
 const A4_WIDTH = 796;
 const A4_HEIGHT = 1123;
 const BASE_LETTER_HEIGHT = 96;
 const LETTER_SCALE = 0.5;
+const KOREKTOR_IMAGE = "assets/korektor.png";
+const DOCISK_IMAGE = "assets/docisk.png";
 
 const getLineHeight = (line) => {
   if (!line || line.length === 0) return BASE_LETTER_HEIGHT;
@@ -15,6 +18,8 @@ const getLineHeight = (line) => {
 export default function PrintModule({ lines, onBack }) {
   const [pageW, setPageW] = useState(A4_WIDTH);
   const [animReady, setAnimReady] = useState(false);
+  const korektorSrc = useMemo(() => resolveAssetPath(KOREKTOR_IMAGE), []);
+  const dociskSrc = useMemo(() => resolveAssetPath(DOCISK_IMAGE), []);
 
   // Dynamiczne skalowanie dwóch kartek w oknie
   useEffect(() => {
@@ -108,7 +113,7 @@ export default function PrintModule({ lines, onBack }) {
             }}
           >
             <img
-              src="/assets/korektor.png"
+              src={korektorSrc}
               alt="korektor"
               style={{
                 position: "absolute",
@@ -124,7 +129,7 @@ export default function PrintModule({ lines, onBack }) {
               }}
             />
             <img
-              src="/assets/docisk.png"
+              src={dociskSrc}
               alt="docisk"
               style={{
                 position: "absolute",
@@ -156,7 +161,7 @@ export default function PrintModule({ lines, onBack }) {
                   {line.map((letter, j) => (
                     <img
                       key={j}
-                      src={letter.img}
+                      src={resolveAssetPath(letter.img)}
                       alt={letter.char}
                       width={letter.width * LETTER_SCALE * scale}
                       height={
@@ -230,7 +235,7 @@ export default function PrintModule({ lines, onBack }) {
                     {[...line].map((letter, j) => (
                       <img
                         key={j}
-                        src={letter.img}
+                        src={resolveAssetPath(letter.img)}
                         alt={letter.char}
                         width={letter.width * LETTER_SCALE * scale}
                         height={

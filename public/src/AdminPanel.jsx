@@ -30,13 +30,13 @@ export default function AdminPanel({ onCalibrate }) {
         }}
       >
         <img
-          src="/assets/kaszta.png"
+          src="assets/kaszta.png"
           alt="Kaszta"
           style={{ width: "400px", cursor: "pointer" }}
           onClick={() => onCalibrate("kaszta")}
         />
         <img
-          src="/assets/kaszta_szuflada.png"
+          src="assets/kaszta_szuflada.png"
           alt="Kaszta szuflada"
           style={{ width: "400px", cursor: "pointer" }}
           onClick={() => onCalibrate("szuflada")}
