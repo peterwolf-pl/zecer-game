@@ -181,6 +181,19 @@ export default function LetterFieldEditor({
 
   const jsonOutput = useMemo(() => JSON.stringify(fields, null, 2), [fields]);
 
+  function handleSaveToFile() {
+    const fileName = pozSrc.split("/").pop() || "poz.json";
+    const blob = new Blob([jsonOutput], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div style={{ maxWidth: 1180, margin: "0 auto", padding: "24px" }}>
       <h1 style={{ fontSize: 28, marginBottom: 12 }}>Edytor pól liter</h1>
@@ -442,6 +455,22 @@ export default function LetterFieldEditor({
 
       <div style={{ marginTop: 32 }}>
         <h2 style={{ fontSize: 20, marginBottom: 8 }}>Aktualny JSON</h2>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <button
+            onClick={handleSaveToFile}
+            style={{
+              background: "#2563eb",
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              padding: "6px 12px",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
+          >
+            Zapisz plik konfiguracyjny
+          </button>
+        </div>
         <textarea
           readOnly
           value={jsonOutput}
